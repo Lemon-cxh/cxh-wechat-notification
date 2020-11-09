@@ -9,7 +9,7 @@ import hudson.scm.ChangeLogSet;
 import hudson.tasks.*;
 import io.jenkins.plugins.notifaction.dto.MarkdownMessage;
 import io.jenkins.plugins.notifaction.dto.NotifactionInfo;
-import io.jenkins.plugins.notifaction.uitl.NotifactionUtil;
+import io.jenkins.plugins.notifaction.uitl.HttpUtil;
 import jenkins.tasks.SimpleBuildStep;
 import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
@@ -48,12 +48,6 @@ public class WechatNotifaction extends Notifier implements SimpleBuildStep {
         String authorName = "手动触发";
         String message = envVars.get("GIT_COMMIT");
         ChangeLogSet<?> changeSet = build.getChangeSet();
-        if (changeSet.isEmptySet()) {
-            AbstractBuild previousBuild = build.getPreviousBuild();
-            if (Objects.nonNull(previousBuild)) {
-                changeSet = previousBuild.getChangeSet();
-            }
-        }
         if (!changeSet.isEmptySet()) {
             ChangeLogSet.Entry entry = (ChangeLogSet.Entry) changeSet.getItems()[0];
             authorName = entry.getAuthor().getFullName();
@@ -68,7 +62,8 @@ public class WechatNotifaction extends Notifier implements SimpleBuildStep {
                 .commitMessage(message)
                 .estimatedDuration(project.getEstimatedDuration())
                 .build();
-        NotifactionUtil.push(webhookUrl, MarkdownMessage.buildStartContent(notifactionInfo));
+        listener.getLogger().println(build.getTimestampString());
+        HttpUtil.push(webhookUrl, MarkdownMessage.buildStartContent(notifactionInfo));
         return true;
     }
 
@@ -84,9 +79,10 @@ public class WechatNotifaction extends Notifier implements SimpleBuildStep {
         NotifactionInfo notifactionInfo = NotifactionInfo.builder()
                 .projectName(run.getParent().getFullDisplayName())
                 .description(run.getParent().getDescription())
+                .timestamp(run.getTimestampString())
                 .result(run.getResult())
                 .build();
-        NotifactionUtil.push(webhookUrl, MarkdownMessage.buildEndContent(notifactionInfo));
+        HttpUtil.push(webhookUrl, MarkdownMessage.buildEndContent(notifactionInfo));
     }
 
     @Override

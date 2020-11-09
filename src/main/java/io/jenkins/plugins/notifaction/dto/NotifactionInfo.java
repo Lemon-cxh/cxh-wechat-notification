@@ -12,18 +12,44 @@ import java.util.Objects;
  **/
 public class NotifactionInfo {
 
+    /**
+     * 项目名
+     */
     private final String projectName;
 
+    /**
+     * 描述
+     */
     private final String description;
 
+    /**
+     * 分支名
+     */
     private final String branchName;
 
+    /**
+     * 提交者
+     */
     private final String authorName;
 
+    /**
+     * 提交信息
+     */
     private final String commitMessage;
 
+    /**
+     * 预计用时
+     */
     private final Long estimatedDuration;
 
+    /**
+     * 构建用时
+     */
+    private final String timestamp;
+
+    /**
+     * 结果
+     */
     private final Result result;
 
     public String getProjectName() {
@@ -56,6 +82,11 @@ public class NotifactionInfo {
                 + estimatedDuration / 60000 + "分钟" + ContentConstant.END_TAG;
     }
 
+    public String getTimestamp() {
+        return ContentConstant.QUOTE + ContentConstant.TIMESTAMP + ContentConstant.GRAY_FONT_COLOR
+                + timestamp + ContentConstant.END_TAG;
+    }
+
     public String getResult(){
         String data = ContentConstant.QUOTE + ContentConstant.RESULT;
         if (Objects.isNull(result)) {
@@ -86,6 +117,7 @@ public class NotifactionInfo {
         this.authorName = builder.authorName;
         this.commitMessage = builder.commitMessage;
         this.estimatedDuration = builder.estimatedDuration;
+        this.timestamp = builder.timestamp;
         this.result = builder.result;
     }
 
@@ -106,6 +138,8 @@ public class NotifactionInfo {
         private String commitMessage;
 
         private Long estimatedDuration;
+
+        private String timestamp;
 
         private Result result;
 
@@ -140,6 +174,11 @@ public class NotifactionInfo {
 
         public Builder estimatedDuration(Long estimatedDuration) {
             this.estimatedDuration = estimatedDuration;
+            return this;
+        }
+
+        public Builder timestamp(String timestamp) {
+            this.timestamp = timestamp;
             return this;
         }
 

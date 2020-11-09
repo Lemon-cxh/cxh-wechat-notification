@@ -1,6 +1,7 @@
 package io.jenkins.plugins.notifaction.dto;
 
 import io.jenkins.plugins.notifaction.constant.ContentConstant;
+import io.jenkins.plugins.notifaction.uitl.HttpUtil;
 import net.sf.json.JSONObject;
 
 /**
@@ -14,6 +15,11 @@ public class MarkdownMessage {
 
     private MarkdownType markdown;
 
+    /**
+     * 构建开始信息
+     * @param notifactionInfo 文本信息
+     * @return JSONString
+     */
     public static String buildStartContent(NotifactionInfo notifactionInfo) {
         String content = ContentConstant.START_TEXT + ContentConstant.WRAP +
                 notifactionInfo.getProjectName() + ContentConstant.WRAP +
@@ -22,18 +28,25 @@ public class MarkdownMessage {
                 notifactionInfo.getEstimatedDuration() + ContentConstant.WRAP +
                 notifactionInfo.getAuthorName() + ContentConstant.WRAP +
                 notifactionInfo.getCommitMessage();
-        return getJSONString(content);
+        return toJSONString(content);
     }
 
+    /**
+     * 构建结束信息
+     * @param notifactionInfo 文本信息
+     * @return JSONString
+     */
     public static String buildEndContent(NotifactionInfo notifactionInfo) {
         String content = ContentConstant.END_TEXT + ContentConstant.WRAP +
                 notifactionInfo.getProjectName() + ContentConstant.WRAP +
                 notifactionInfo.getDescription() + ContentConstant.WRAP +
-                notifactionInfo.getResult();
-        return getJSONString(content);
+                notifactionInfo.getTimestamp() + ContentConstant.WRAP +
+                notifactionInfo.getResult() + ContentConstant.WRAP +
+                ContentConstant.WRAP + HttpUtil.getOneSaid();
+        return toJSONString(content);
     }
 
-    public static String getJSONString(String content) {
+    private static String toJSONString(String content) {
         MarkdownType type = new MarkdownType();
         type.setContent(content);
         MarkdownMessage markdownMessage = new MarkdownMessage();

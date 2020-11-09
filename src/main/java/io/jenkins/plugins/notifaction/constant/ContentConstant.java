@@ -15,7 +15,8 @@ public class ContentConstant {
     public static final String BRANCH_NAME = "分支:";
     public static final String AUTHOR_NAME = "提交人:";
     public static final String COMMIT_MESSAGE = "提交信息:";
-    public static final String ESTIMATED_DURATION = "估计时间:";
+    public static final String ESTIMATED_DURATION = "预计用时:";
+    public static final String TIMESTAMP = "构建用时:";
     public static final String RESULT = "结果:";
 
     public static final String WRAP = "\n";
